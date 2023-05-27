@@ -1,0 +1,158 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Stock Data</title>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <nav>
+    <div class="navbar">
+        <form method="post">
+            {% csrf_token %}
+            <label for="symbol_choice">종목</label><br>
+            <select name="symbol_choice" id="symbol_choice">
+                {% for symbol in symbol_list %}
+                    <option value="{{ symbol.Code }}" {% if symbol.Code == code %}selected{% endif %}>{{ symbol.Code }} : {{ symbol.Name }}</option>
+                {% endfor %}
+            </select>
+            
+            <br>
+            <label for="ndays"></label>
+                <span id="ndaysLabel">{{ ndays }}</span> 일<br>
+                <input type="range" name="ndays" id="ndays" min="50" max="365" value="{{ ndays }}" style="width: 280px;"
+                    oninput="ndaysLabel.textContent = ndays.value">
+            <br>
+            
+            <label for="chart_style">차트 스타일</label>
+            <select name="chart_style" id="chart_style">
+                <option value="default" {% if chart_style == 'default' %}selected{% endif %}>Default</option>
+                <option value="binance" {% if chart_style == 'binance' %}selected{% endif %}>Binance</option>
+                <option value="blueskies" {% if chart_style == 'blueskies' %}selected{% endif %}>Blue Skies</option>
+                <option value="brasil" {% if chart_style == 'brasil' %}selected{% endif %}>Brasil</option>
+                <option value="charles" {% if chart_style == 'charles' %}selected{% endif %}>Charles</option>
+                <option value="checkers" {% if chart_style == 'checkers' %}selected{% endif %}>Checkers</option>
+                <option value="classic" {% if chart_style == 'classic' %}selected{% endif %}>Classic</option>
+                <option value="yahoo" {% if chart_style == 'yahoo' %}selected{% endif %}>Yahoo</option>
+                <option value="mike" {% if chart_style == 'mike' %}selected{% endif %}>Mike</option>
+                <option value="nightclouds" {% if chart_style == 'nightclouds' %}selected{% endif %}>Night Clouds</option>
+                <option value="sas" {% if chart_style == 'sas' %}selected{% endif %}>SAS</option>
+                <option value="starsandstripes" {% if chart_style == 'starsandstripes' %}selected{% endif %}>Stars and Stripes</option>
+            </select>
+            <br>
+            <label for="volume_chart">Volume 차트</label>
+            <input type="checkbox" name="volume_chart" id="volume_chart" {% if volume_chart %}checked{% endif %}>
+            <br>
+            <input type="submit" value="선택">
+        </form>
+    </div>
+</nav>
+
+    <div class="content">
+        <h1></h1>
+        {% if graphic %}
+    <div class="chart-container">
+        <div id="color-names">
+            <div class="color-name" id="upColorName"></div>
+            <div class="color-name" id="downColorName"></div>
+        </div>
+        <div id="chart-wrapper">
+            <img src="data:image/png;base64,{{ graphic }}" alt="Stock Chart">
+        </div>
+    </div>
+{% endif %}
+
+    </div>
+    <script>
+        function getUpColorName(style) {
+            var upColorName = "";
+            var downColorName = ""; // 추가된 부분
+    
+            switch (style) {
+                case "default":
+                    upColorName = "white";
+                    downColorName = "black"; // 추가된 부분
+                    break;
+                case "binance":
+                    upColorName = "Green";
+                    downColorName = "pink"; // 추가된 부분
+                    break;
+                case "blueskies":
+                    upColorName = "white";
+                    downColorName = "blue"; // 추가된 부분
+                    break;
+                case "brasil":
+                    upColorName = "yellow";
+                    downColorName = "navy"; // 추가된 부분
+                    break;
+                case "charles":
+                    upColorName = "green";
+                    downColorName = "red"; // 추가된 부분
+                    break;
+                case "checkers":
+                    upColorName = "black";
+                    downColorName = "red"; // 추가된 부분
+                    break;
+                case "classic":
+                    upColorName = "white";
+                    downColorName = "black"; // 추가된 부분
+                    break;
+                case "yahoo":
+                    upColorName = "green";
+                    downColorName = "red"; // 추가된 부분
+                    break;
+                case "mike":
+                    upColorName = "black";
+                    downColorName = "blue"; // 추가된 부분
+                    break;
+                case "nightclouds":
+                    upColorName = "white";
+                    downColorName = "blue"; // 추가된 부분
+                    break;
+                case "sas":
+                    upColorName = "navy";
+                    downColorName = "white"; // 추가된 부분
+                    break;
+                case "starsandstripes":
+                    upColorName = "navy";
+                    downColorName = "white"; // 추가된 부분
+                    break;
+            }
+    
+            return [upColorName, downColorName]; // 변경된 부분
+        }
+    
+        function changeChartStyle() {
+            var style = document.getElementById('chart_style').value;
+            var [upColorName, downColorName] = getUpColorName(style);
+    
+            var upColorNameElement = document.getElementById("upColorName");
+            upColorNameElement.textContent = "Up 그래프의 색상: " + upColorName;
+    
+            var downColorNameElement = document.getElementById("downColorName");
+            downColorNameElement.textContent = "Down 그래프의 색상: " + downColorName;
+        }
+    
+        window.addEventListener('DOMContentLoaded', function() {
+            // 네비게이션 바에서 선택된 종목 유지
+            var symbolChoice = document.getElementById('symbol_choice');
+            symbolChoice.addEventListener('change', function() {
+                this.form.submit();
+            });
+    
+            var chartStyle = document.getElementById('chart_style');
+            chartStyle.addEventListener('change', changeChartStyle);
+    
+            // 초기 로드 시 차트 스타일에 따른 색상 설정
+            changeChartStyle();
+        });
+    </script>
+    
+    
+    
+</body>
+</html>

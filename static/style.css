@@ -1,0 +1,30 @@
+.navbar {
+    width: 300px;
+    height: 100vh;
+    background-color: #f1f1f1;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.navbar select,.navbar input[type="range"],.navbar input[type="checkbox"]{
+    margin-bottom: 30px;
+}
+
+.navbar select{
+    font-size: 14px;
+}
+
+.navbar input[type="checkbox"]{
+    transform:scale(1.5);
+}
+
+.content {
+    margin-left: 300px;
+    padding: 20px;
+}
